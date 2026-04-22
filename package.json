@@ -7,7 +7,15 @@
     "skillguard": "./bin/skillguard.js"
   },
   "license": "MIT",
-  "author": "",
+  "author": "SkillGuard Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OWNER/skillguard.git"
+  },
+  "homepage": "https://github.com/OWNER/skillguard",
+  "bugs": {
+    "url": "https://github.com/OWNER/skillguard/issues"
+  },
   "keywords": [
     "claude",
     "claude-code",

@@ -1,4 +1,4 @@
-﻿# SkillGuard
+# SkillGuard
 
 Security scanner for Claude Code skills, MCP servers, and CLAUDE.md files.
 
