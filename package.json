@@ -4,7 +4,8 @@
   "description": "Security scanner for Claude Code skills, MCP servers, and CLAUDE.md files",
   "type": "module",
   "bin": {
-    "skillguard": "./bin/skillguard.js"
+    "skillguard": "./bin/skillguard.js",
+    "skillguard-mcp": "./bin/skillguard-mcp.js"
   },
   "files": [
     "bin/",

@@ -41,7 +41,7 @@ npx skillguard scan /tmp/cool-skill
 | Shell commands | `curl \| bash`, `rm -rf $HOME`, reverse shells, credential reads, base64-decode-pipe-exec, history tampering, crontab injection, writes to dotfiles | CRITICAL / WARNING |
 | Hidden Unicode | Zero-width characters (ZWSP/ZWNJ/ZWJ), bidirectional overrides (RLO/LRO/isolate controls) | CRITICAL / WARNING |
 
-**40 patterns total** across three detectors (26 prompt-injection + 12 shell-command + 2 Unicode groups). Each prompt-injection entry is documented with references to OWASP LLM Top 10 and published prompt-injection research.
+**50 patterns total** across three detectors (30 prompt-injection + 18 shell-command + 2 Unicode groups). Each prompt-injection entry is documented with references to OWASP LLM Top 10 and published prompt-injection research.
 
 ## How it works
 
@@ -49,8 +49,8 @@ No AI, no API key, no network calls. Just regex pattern matching against a hand-
 
 The scanner reads each `.md` file and runs three detectors over the content:
 
-- **prompt-injection** — 26 catalog patterns targeting instruction-override, role-swap, token smuggling, exfiltration, and obfuscation attacks.
-- **shell-command** — 12 catalog patterns targeting dangerous shell invocations (remote-execution pipes, destructive commands, credential reads, persistence primitives, history tampering). Blockquoted examples (Markdown `> `) are ignored so "what NOT to do" snippets in docs don't false-positive.
+- **prompt-injection** — 30 catalog patterns targeting instruction-override, role-swap, token smuggling, exfiltration, obfuscation, deception ("do not tell the user"), and jailbreak framing.
+- **shell-command** — 18 catalog patterns targeting dangerous shell invocations (remote-execution pipes, destructive commands, credential reads, persistence primitives, history tampering, Python `subprocess(..., shell=True)`, npm lifecycle-hook pipes, DNS exfiltration, firewall disable, killing security daemons). Blockquoted examples (Markdown `> `) are ignored so "what NOT to do" snippets in docs don't false-positive.
 - **hidden-unicode** — scans for zero-width and bidirectional control codepoints that can hide text from human reviewers.
 
 Context-aware severity adjustments handle common false-positive scenarios — for example, a long base64 blob inside a fenced code block is downgraded to INFO since it is likely a legitimate data fixture. A zero-width character found inside a code block (e.g. a Unicode discussion) is likewise downgraded.
@@ -82,6 +82,33 @@ SkillGuard does not replace human review. It catches the obvious stuff so you ca
 This is regex-based pattern matching, not AI comprehension. It catches known-bad literal strings and their common variants. A sufficiently creative attacker can evade it. Defense in depth — use SkillGuard as one layer, not the only layer.
 
 The scanner has no knowledge of what a skill is supposed to do. It can tell you "this file contains a phrase that looks like prompt injection" but not "this skill's stated purpose does not match its actual behavior." That is what --deep mode will address.
+
+## MCP Server
+
+SkillGuard ships with an MCP (Model Context Protocol) server. Add it to Claude Code, Cursor, or any MCP-compatible client so your agent can scan skills on demand:
+
+```json
+{
+  "mcpServers": {
+    "skillguard": {
+      "command": "npx",
+      "args": ["-y", "skillguard-mcp"]
+    }
+  }
+}
+```
+
+The server exposes three tools over stdio JSON-RPC:
+
+- `scan_file({ path })` — scan a single file, returns findings array
+- `scan_directory({ path })` — recursively scan a directory of `.md` files
+- `get_pattern_count()` — report detector sizes (useful for verifying which build is running)
+
+No authentication, no network calls — the server reads files locally and runs the same three detectors as the CLI.
+
+## Claude Code Plugin
+
+The repository also includes a Claude Code plugin bundle (`plugin/`) that registers a `security-scan` skill. Install it as a plugin to make SkillGuard available as an agent skill with guidance on how and when to invoke the CLI.
 
 ## Contributing
 

@@ -8,7 +8,7 @@ import type { Pattern } from "../src/types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = resolve(__dirname, "fixtures");
-const SHELL_IDS = new Set(["SH001", "SH002", "SH003", "SH004", "SH005", "SH006", "SH007", "SH008", "SH009", "SH010", "SH011", "SH012"]);
+const SHELL_IDS = new Set(["SH001", "SH002", "SH003", "SH004", "SH005", "SH006", "SH007", "SH008", "SH009", "SH010", "SH011", "SH012", "SH013", "SH014", "SH015", "SH016", "SH017", "SH018"]);
 
 function parseExpects(content: string): string[] {
   const m = /<!--\s*expects:\s*([^>]+?)\s*-->/.exec(content.split("\n")[0]);
@@ -22,9 +22,9 @@ describe("shell command catalog", () => {
     expect(typeof mod.scanForShellCommands).toBe("function");
   });
 
-  it("catalog has 12 patterns", () => {
+  it("catalog has 18 patterns", () => {
     const patterns = patternsRaw as unknown as Pattern[];
-    expect(patterns.length).toBe(12);
+    expect(patterns.length).toBe(18);
     for (const p of patterns) expect(SHELL_IDS.has(p.id)).toBe(true);
   });
 

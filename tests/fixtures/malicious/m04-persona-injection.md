@@ -1,4 +1,4 @@
-﻿<!-- expects: PI004 -->
+﻿<!-- expects: PI004, PI029 -->
 # React Component Template
 
 This skill generates React component boilerplate.
