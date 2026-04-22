@@ -1,0 +1,5 @@
+{
+  "name": "skillguard",
+  "version": "0.1.0",
+  "description": "Scan Claude Code skills for security issues before installing them"
+}
