@@ -1,5 +1,7 @@
 export type Severity = "CRITICAL" | "WARNING" | "INFO";
 
+export type DetectorName = "prompt-injection" | "shell-command" | "hidden-unicode";
+
 export type Pattern = {
   id: string;
   name: string;
@@ -23,4 +25,5 @@ export type Finding = {
   severity: Severity;
   category: string;
   description: string;
+  detector?: DetectorName;
 };

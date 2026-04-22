@@ -6,6 +6,11 @@
   "bin": {
     "skillguard": "./bin/skillguard.js"
   },
+  "files": [
+    "bin/",
+    "dist/",
+    "SECURITY.md"
+  ],
   "license": "MIT",
   "author": "SkillGuard Contributors",
   "repository": {

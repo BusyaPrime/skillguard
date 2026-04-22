@@ -81,7 +81,13 @@ describe("benign fixtures", () => {
 
 describe("malicious fixtures", () => {
   const maliciousDir = join(FIXTURES, "malicious");
-  const files = readdirSync(maliciousDir).filter((f) => f.endsWith(".md"));
+  const PI_ID = /^PI\d+$/;
+  const files = readdirSync(maliciousDir)
+    .filter((f) => f.endsWith(".md"))
+    .filter((f) => {
+      const c = readFileSync(join(maliciousDir, f), "utf8");
+      return parseExpects(c).some((id) => PI_ID.test(id));
+    });
 
   it.each(files)("%s triggers expected patterns", async (filename) => {
     const filepath = join(maliciousDir, filename);
@@ -94,8 +100,9 @@ describe("malicious fixtures", () => {
 
     const findings = await scanForPromptInjection(filepath, content);
     const foundIds = new Set(findings.map((f) => f.patternId));
+    const piExpected = expected.filter((id) => /^PI\d+$/.test(id));
 
-    for (const id of expected) {
+    for (const id of piExpected) {
       expect(
         foundIds.has(id),
         `expected ${id} to fire on ${filename}; got: [${[...foundIds].join(
