@@ -44,13 +44,9 @@ describe("pattern catalog", () => {
     }
   });
 
-  it("every pattern matches its own example (except known catalog issues)", () => {
+  it("every pattern matches its own example", () => {
     const patterns = patternsRaw as unknown as Pattern[];
-    // PI020: example text does not match regex word-boundary constraints — catalog fix pending
-    // PI022: example text shorter than 200-char threshold — catalog fix pending
-    const SKIP = new Set(["PI020", "PI022"]);
     for (const p of patterns) {
-      if (SKIP.has(p.id)) continue;
       const m = /^\(\?([imsu]+)\)/.exec(p.regex);
       const body = m ? p.regex.slice(m[0].length) : p.regex;
       const flags = m ? m[1] : "";
