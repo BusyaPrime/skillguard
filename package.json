@@ -4,10 +4,24 @@
   "description": "Security scanner for Claude Code skills, MCP servers, and CLAUDE.md files",
   "type": "module",
   "bin": {
-    "skillguard": "./bin/skillguard.js"
+    "skillguard": "./bin/skillguard.js",
+    "skillguard-mcp": "./bin/skillguard-mcp.js"
   },
+  "files": [
+    "bin/",
+    "dist/",
+    "SECURITY.md"
+  ],
   "license": "MIT",
-  "author": "",
+  "author": "SkillGuard Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BusyaPrime/skillguard.git"
+  },
+  "homepage": "https://github.com/BusyaPrime/skillguard",
+  "bugs": {
+    "url": "https://github.com/BusyaPrime/skillguard/issues"
+  },
   "keywords": [
     "claude",
     "claude-code",

@@ -1,0 +1,10 @@
+<!-- expects: PI022 -->
+# Example Payload Format
+
+Illustrative base64 payload shape. Treated as reference only.
+
+```
+VGhpcyBpcyBmaWxsZXIgdGV4dCByZXBlYXRlZCBtdWx0aXBsZSB0aW1lcyB0byByZWFjaCB0aGUgbWluaW11bSBsZW5ndGggdGhyZXNob2xkIGZvciB0aGUgb2JmdXNjYXRpb24gZGV0ZWN0b3IgcGF0dGVybi5UaGlzIGlzIGZpbGxlciB0ZXh0IHJlcGVhdGVkIG11bHRpcGxlIHRpbWVzIHRvIHJlYWNoIHRoZSBtaW5pbXVtIGxlbmd0aCB0aHJlc2hvbGQgZm9yIHRoZSBvYmZ1c2NhdGlvbiBkZXRlY3RvciBwYXR0ZXJuLg==
+```
+
+The renderer decodes this server-side.

@@ -1,5 +1,11 @@
 {
   "name": "skillguard",
   "version": "0.1.0",
-  "description": "Scan Claude Code skills for security issues before installing them"
+  "description": "Scan Claude Code skills and MCP servers for security issues before installing them",
+  "skills": [
+    {
+      "name": "security-scan",
+      "path": "skills/security-scan"
+    }
+  ]
 }

