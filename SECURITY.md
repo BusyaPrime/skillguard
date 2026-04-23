@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-Please report security vulnerabilities via [GitHub Security Advisories](https://github.com/OWNER/skillguard/security/advisories/new) rather than opening a public issue.
+Please report security vulnerabilities via [GitHub Security Advisories](https://github.com/BusyaPrime/skillguard/security/advisories/new) rather than opening a public issue.
 
 You should receive an initial response within 48 hours.
 

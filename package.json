@@ -16,11 +16,11 @@
   "author": "SkillGuard Contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OWNER/skillguard.git"
+    "url": "https://github.com/BusyaPrime/skillguard.git"
   },
-  "homepage": "https://github.com/OWNER/skillguard",
+  "homepage": "https://github.com/BusyaPrime/skillguard",
   "bugs": {
-    "url": "https://github.com/OWNER/skillguard/issues"
+    "url": "https://github.com/BusyaPrime/skillguard/issues"
   },
   "keywords": [
     "claude",

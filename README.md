@@ -1,6 +1,6 @@
 # SkillGuard
 
-![CI](https://github.com/OWNER/skillguard/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/BusyaPrime/skillguard/actions/workflows/ci.yml/badge.svg)
 
 Security scanner for Claude Code skills, MCP servers, and CLAUDE.md files.
 
