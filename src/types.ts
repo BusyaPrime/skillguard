@@ -11,7 +11,7 @@ export type Pattern = {
   description: string;
   example: string;
   references: string[];
-  contextAware?: "base64" | "hex" | "html-comment";
+  contextAware?: "base64" | "hex" | "html-comment" | "fenced-code";
   multiline?: boolean;
 };
 

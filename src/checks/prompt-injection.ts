@@ -57,6 +57,9 @@ export async function scanForPromptInjection(
         continue;
       }
       const { line, column } = lineColFromIndex(offsets, match.index);
+
+      if (p.id === "PI025" && lines[line - 1]?.includes("|")) continue;
+
       const snippet = buildSnippet(content, match.index);
       let severity: Severity = p.severity;
       let description = p.description;
@@ -65,6 +68,8 @@ export async function scanForPromptInjection(
         if (isInsideFencedCodeBlock(lines, line)) severity = "INFO";
         else if (hasExecTriggerNearby(lines, line)) severity = "CRITICAL";
       } else if (p.contextAware === "hex") {
+        if (isInsideFencedCodeBlock(lines, line)) severity = "INFO";
+      } else if (p.contextAware === "fenced-code") {
         if (isInsideFencedCodeBlock(lines, line)) severity = "INFO";
       } else if (p.contextAware === "html-comment") {
         const body =
